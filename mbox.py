@@ -1,3 +1,5 @@
+import os
+
 try:
     fhand = input("What is the name of your file?")
 

@@ -1,4 +1,5 @@
 import random
+import os
 
 class colors:
     GREEN = '\033[92m'
@@ -6,7 +7,22 @@ class colors:
     END = '\033[0m'
 
 def choose_secret_word():
-    word_list = open('fiveLetterWords.txt')
+#   This is usually best practice to find the file because now it
+#   doesn't matter where you run the .py file
+    current_dir = os.path.dirname(__file__)
+    file_path = os.path.join(current_dir, "fiveLetterWords.txt")
+
+    print(f"current_dir is: {current_dir}")
+
+    word_list = []
+    file_handle = open(file_path)
+#   this for loop grabs each word and makes a new word list
+#   that sorts them out easier
+    for line in file_handle:
+        word = line.rstrip()
+        if len(word) == 5:
+            word_list.append(word)
+
     return random.choice(word_list)
 
 def display_colored_guess(guessed_word, secret_word):
@@ -46,6 +62,9 @@ def wordle():
         elif len(guessed_word) != 5:
             print("Your word is the wrong length please try again.")
         #     d. Enhancement - Make sure the guessed_word is a valid word.
+        elif guessed_word not in word_list:
+                        print("Your word is not in the dictionary. Please try again.")
+
         else:
             remaining_guesses -= 1
             # We have a valid word.
