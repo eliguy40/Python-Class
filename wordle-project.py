@@ -6,7 +6,7 @@ class colors:
     END = '\033[0m'
 
 def choose_secret_word():
-    word_list = ["apple", "berry", "mango", "peach", "grape"]
+    word_list = open('fiveLetterWords.txt')
     return random.choice(word_list)
 
 def display_colored_guess(guessed_word, secret_word):
