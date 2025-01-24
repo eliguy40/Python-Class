@@ -49,6 +49,7 @@ def wordle():
     # TODO: Comment out this print statement before finishing.
     # print(secret_word)
 
+    win_streak = True
     remaining_guesses = 6
     while remaining_guesses > 0:
         # 2. Prompt the user for a 5-letter word and validate
@@ -61,9 +62,9 @@ def wordle():
         #     c. Make sure the guessed_word is only 5 characters long.
         elif len(guessed_word) != 5:
             print("Your word is the wrong length please try again.")
-        #     d. Enhancement - Make sure the guessed_word is a valid word.
-        elif guessed_word not in word_list:
-                        print("Your word is not in the dictionary. Please try again.")
+        #     d. TODO: fix this --> Enhancement - Make sure the guessed_word is a valid word.
+        #elif guessed_word not in word_list:
+        #                print("Your word is not in the dictionary. Please try again.")
 
         else:
             remaining_guesses -= 1
@@ -72,13 +73,44 @@ def wordle():
             # 3. Compare the guessed_word with the secret_word.
             #     a. If the guessed_word equals the secret_word then they win! Game Over!
             if guessed_word == secret_word:
-                print("You guessed the correct word! You win!!")
-                break
+                win_streak = True
+                print(colors.GREEN + guessed_word + colors.END, end = '')
+                print("\nYou guessed the correct word! You win!!")
+                print(f"Your current streak is... {high_score(win_streak)}!")
+                quit()
+            elif remaining_guesses == 0:
+                print("Sorry, you lost! Win streak reset :(")
+                win_streak = False
+                print(f"Your current streak is... {high_score(win_streak)}!")
+                quit()
             else:
                 display_colored_guess(guessed_word, secret_word)
             print(f"You guessed incorrectly, you have {remaining_guesses} tries left.")
         # 4. If the guess wasn't correct then we let the guess again and decrease their remaining attempts.
+        
 
+def high_score(win_streak):
+    current_dir = os.path.dirname(__file__)
+    file_path = os.path.join(current_dir, "highScore.txt")
+
+    # Read the existing score (default to 0 if the file doesn't exist or is empty)
+    try:
+        with open(file_path, "r") as file_handle:
+            high_score = int(file_handle.read().strip() or 0)
+    except FileNotFoundError:
+        high_score = 0
+
+    # Update the score based on winlose
+    if win_streak == True:
+        new_score = high_score + 1 
+    else:
+        new_score = 0
+
+    # Write the new score to the file
+    with open(file_path, "w") as file_handle:
+        file_handle.write(str(new_score))
+    
+    return new_score
 
 if __name__ == "__main__":
     wordle()
