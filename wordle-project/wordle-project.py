@@ -12,7 +12,8 @@ def choose_secret_word():
     current_dir = os.path.dirname(__file__)
     file_path = os.path.join(current_dir, "fiveLetterWords.txt")
 
-    print(f"current_dir is: {current_dir}")
+#   use for troubleshooting in case of os path error stuffs
+#    print(f"current_dir is: {current_dir}")
 
     word_list = []
     file_handle = open(file_path)
@@ -43,14 +44,17 @@ def display_colored_guess(guessed_word, secret_word):
     print()
 
 def wordle():
-    print("Welcome to wordle!!!")
+    win_streak = "open"
+
+    print(f"Welcome to wordle!!! Your current win streak is... {high_score(win_streak)}!")
     # 1. Pick a random word from a list of words (ideally a super large list/dictionary)
     secret_word = choose_secret_word()
     # TODO: Comment out this print statement before finishing.
     # print(secret_word)
 
-    win_streak = True
+
     remaining_guesses = 6
+
     while remaining_guesses > 0:
         # 2. Prompt the user for a 5-letter word and validate
         guessed_word = input("Guess your 5-letter word: ")
@@ -79,9 +83,10 @@ def wordle():
                 print(f"Your current streak is... {high_score(win_streak)}!")
                 quit()
             elif remaining_guesses == 0:
-                print("Sorry, you lost! Win streak reset :(")
+                print(f"Sorry, you lost! The secret word was...")
+                print(colors.GREEN + secret_word + colors.END, end = '')
                 win_streak = False
-                print(f"Your current streak is... {high_score(win_streak)}!")
+                print(f"\nStreak reset to... {high_score(win_streak)}! :(")
                 quit()
             else:
                 display_colored_guess(guessed_word, secret_word)
@@ -98,11 +103,13 @@ def high_score(win_streak):
         with open(file_path, "r") as file_handle:
             high_score = int(file_handle.read().strip() or 0)
     except FileNotFoundError:
-        high_score = 0
+        print("cannot find file: highScore.txt")
 
     # Update the score based on winlose
     if win_streak == True:
         new_score = high_score + 1 
+    elif win_streak == "open":
+        return high_score
     else:
         new_score = 0
 
