@@ -39,3 +39,4 @@ shopping_list = shopping_list[0], shopping_list[1] * 3, shopping_list[2]
 print(shopping_list)
 # Prints 4 and 5 in fruits and vegetables list
 print(f"{shopping_list[2][4]}, {shopping_list[2][5]}")
+
