@@ -124,8 +124,35 @@ def graph_email_counts(email_counts):
     # except Exception as e: # Catch any matplotlib related errors
     #     print(f"\nError creating matplotlib graph: {e}")
 
-days_of_week = count_days_of_week("/home/elijah/Documents/code/Python-Class/mbox.txt")
+def most_emailed(emails):
 
+    highest_key = None
+    highest_number = float("-inf")
+
+    for key, value in emails.items():  # Iterate through key-value pairs
+        if isinstance(value, (int, float)):
+            if value > highest_number:  # Direct comparison
+                highest_number = value
+                highest_key = key
+        else:
+            print("your value is not an int")
+    
+    print(f"Most emailed: {highest_key} \nAmount of emails: {highest_number}")
+
+def email_domain_counter(filename):
+    domain_counter = {}
+    with open(filename, 'r') as file:
+        for line in file:
+            if line.startswith("From "):
+                words = line.strip().split()
+                email_address = words[1]
+                domains = email_address.split("@")[1]
+                # print(domains)
+                domain_counter[domains] = domain_counter.get(domains, 0) + 1
+
+    return domain_counter
+
+days_of_week = count_days_of_week("/home/elijah/Documents/code/Python-Class/mbox.txt")
 email_choice = input("Open mbox or your own file? (mbox/custom)\n").upper()
 
 if email_choice == "MBOX":
@@ -134,5 +161,16 @@ elif email_choice == "CUSTOM":
     emails = input("enter your file (with path) below:\n")
 else:
     print("sorry, please input a correct respone.")
+    quit()
 
-graph_email_counts(emails)
+action = input("What would you like to do with said file?\n1. Graph email count\n2. Show most contacted email\n3. Count email domains\n")
+
+if action == "1":
+    graph_email_counts(emails)
+elif action == "2":
+    most_emailed(emails)
+elif action == "3":
+    print(email_domain_counter("/home/elijah/Documents/code/Python-Class/mbox.txt"))
+else:
+    print("Either incorrect number was inputed or no input at all.")
+    quit()
