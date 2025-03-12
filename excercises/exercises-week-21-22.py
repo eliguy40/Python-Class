@@ -53,14 +53,17 @@ def count_characters_concise(text):
 
 def count_days_of_week(filename):
     days_counter = {}
-    with open(filename, 'r') as file:
-        for line in file:
-            if line.startswith("From "):
-                words = line.strip().split()
-#                print(words)
-                day = words[2]
-                days_counter[day] = days_counter.get(day, 0) + 1
-
+    try:
+        with open(filename, 'r') as file:
+            for line in file:
+                if line.startswith("From "):
+                    words = line.strip().split()
+    #                print(words)
+                    day = words[2]
+                    days_counter[day] = days_counter.get(day, 0) + 1
+    except FileNotFoundError:
+        print("file not found")
+        return
     return days_counter
 
 def count_emails(filename):
@@ -70,9 +73,8 @@ def count_emails(filename):
             if line.startswith("From "):
                 words = line.strip().split()
 #                print(words)
-                emails = words[1]
+                emails = words[1] # square brackets means index
                 email_counter[emails] = email_counter.get(emails, 0) + 1
-
     return email_counter
 
 def graph_email_counts(email_counts):
@@ -152,18 +154,17 @@ def email_domain_counter(filename):
 
     return domain_counter
 
-days_of_week = count_days_of_week("/home/elijah/Documents/code/Python-Class/mbox.txt")
 email_choice = input("Open mbox or your own file? (mbox/custom)\n").upper()
 
-if email_choice == "MBOX":
+if email_choice == "MBOX (only works with thinkpad laptop rn)":
     emails = count_emails("/home/elijah/Documents/code/Python-Class/mbox.txt")
 elif email_choice == "CUSTOM":
-    emails = input("enter your file (with path) below:\n")
+    emails = count_emails(input("enter your file (with path) below:\n"))
 else:
     print("sorry, please input a correct respone.")
     quit()
 
-action = input("What would you like to do with said file?\n1. Graph email count\n2. Show most contacted email\n3. Count email domains\n")
+action = input("What would you like to do with said file?\n1. Graph email count\n2. Show most contacted email\n3. Count email domains\n4. Count Days of the Week\n")
 
 if action == "1":
     graph_email_counts(emails)
@@ -171,6 +172,9 @@ elif action == "2":
     most_emailed(emails)
 elif action == "3":
     print(email_domain_counter("/home/elijah/Documents/code/Python-Class/mbox.txt"))
+elif action == "4":
+    #TODO fix this lol
+    print(count_days_of_week(emails))
 else:
     print("Either incorrect number was inputed or no input at all.")
     quit()
