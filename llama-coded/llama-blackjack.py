@@ -109,5 +109,23 @@ class BlackjackGame:
         else:
             print("Dealer wins!")
 
+# fun stuff sam and me added
+player = input("What is your name? ").lower()
+#Secret Codes/names
+if player != "sam":
+    print(f"Well why are you on Eli's conputer :raised-eyebrow: {player}!")
+elif player == "sam":
+    print("You are so cool that you automatically win! :D")
+    quit()
+
+if player == "toads are cool":
+    print("Somebody knows facts")
+
+if player == "elon musk":
+    print("Oooh, how did you find my brother's code?? :D :D ;D")
+
+if player == "hacker":
+    print("Oh no")
+    quit()
 game = BlackjackGame()
 game.play()
