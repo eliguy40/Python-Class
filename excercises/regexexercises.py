@@ -14,12 +14,12 @@ print(findall_apple)
 
 # Exercise 3: Using re.search with a more complex pattern
 # Find the first occurrence of a word that starts with 'b' and ends with 'a' in the fruit_text
-b_a_search = re.search(r"\bb\w*a\b", fruit_text)
+b_a_search = re.search(r"\bb.*a\b", fruit_text)
 print(b_a_search.group())
 
 # Exercise 4: Using re.findall with a more complex pattern
 # Find all words that start with 'a' and end with 'e' in the fruit_text
-b_a_findall = re.findall(r"(?:\s|^)(a\w+e)\b", fruit_text)
+b_a_findall = re.findall(r"\ba\w*e\b", fruit_text)
 print(b_a_findall)
 
 # Exercise 5: Using re.search with groups
