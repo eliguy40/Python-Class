@@ -1,4 +1,5 @@
 import re
+import os
 
 # Example names to test
 example_names = [
@@ -51,6 +52,9 @@ example_phone_numbers = [
     "3334445555"
 ]
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def validate_name(name):
     return bool(re.match(r'^[A-Za-z]+( [A-Za-z]+)?$', name))
 
@@ -64,7 +68,7 @@ def clean_name(name):
     # Remove any characters that are not alphabetic or spaces
     cleaned_name = re.sub(r'[^A-Za-z\s]', '', name)
     # Remove extra spaces
-    cleaned_name = re.sub(r'\s+', ' ', cleaned_name).strip()
+    cleaned_name = re.sub(r'\s+', ' ', cleaned_name).strip().title()
     return cleaned_name
 
 def format_phone_number(phone_number):
@@ -92,12 +96,15 @@ class Contact:
 
     def __str__(self):
         return f"Name: {self.name}, number: {self.phone_number}, email: {self.email}"
+    
+class BusinessContact(Contact):
 
-nate = Contact("Nate", "801-234-2345", "nate@gmail.com")
-print(nate)
-
-vincent = Contact("Vincent", "801-234-8765", "vincent@gmail.com")
-print(vincent)
+    def __init__(self, name, phone_number, email, company, job_title):
+        self.name = name
+        self.phone_number = phone_number
+        self.email = email
+        self.company = company
+        self.job_title = job_title
 
 # ContactBook class
 # Create a class called 'ContactBook' to represent a group of contacts. It should have the following features.
@@ -110,7 +117,7 @@ print(vincent)
 #    - display_contacts - prints out all of the contacts in your Contact list.
 class ContactBook:
     def __init__(self):
-        self.contacts = []
+        self.contacts = [Contact("bob", phone_number="801-123-1234", email="bob@gmail.com")]
 
     def add_contact(self, contact: Contact):
         self.contacts.append(contact)
@@ -119,26 +126,96 @@ class ContactBook:
         for contact in self.contacts:
             if contact.name == name:
                 self.contacts.remove(contact)
+                return True
+        return False
 
     def search_contact(self, name):
         for contact in self.contacts:
             if contact.name == name:
-                return True
-        return False
+                return contact
+        return None
 
     def display_contacts(self):
+        if len(self.contacts) == 0:
+            print("You contact book is empty")
         for contact in self.contacts:
             print(contact)
 
-my_contacts = ContactBook()
-my_contacts.add_contact(nate)
-print(my_contacts.contacts)
-my_contacts.delete_contact("Vincent")
-print(my_contacts.search_contact("Vincent"))
-print(my_contacts.search_contact("Nate"))
 
-my_contacts.add_contact(vincent)
+def main():
+    contact_book = ContactBook()
 
-my_contacts.display_contacts()
+    while True:
+        print("Contact Book Menu:")
+        print("1. Add Contact")
+        print("2. Delete Contact")
+        print("3. Search Contact")
+        print("4. Display Contacts")
+        print("5. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            # Ask for a new contact name
+            while True: 
+                name = input("Enter name: ")
+                if validate_name(name):
+                    name = clean_name(name)
+                    break
+                else:
+                    print("Invalid name. Please try again.")
+            pass
+            # Ask for a new contact phone number
+            while True: 
+                phone_number = input("Enter phone number: ")
+                if validate_phone_number(phone_number):
+                    phone_number = format_phone_number(phone_number)
+                    break
+                else:
+                    print("Invalid phone number. Please try again.")
+            pass
+            # Ask for a new contact email
+            while True: 
+                email = input("Enter email: ")
+                if validate_email(email):
+                    break
+                else:
+                    print("Invalid email. Please try again.")
+            pass
+            contact = BusinessContact(name, phone_number, email)
+            contact_book.add_contact(contact)
+            clear_screen()
+            print(f"Successfully added {contact} as a new contact!!")
+        elif choice == "2":
+            name = input("Enter a name for a contact to delete: ")
+            did_delete_contact = contact_book.delete_contact(name)
+            if did_delete_contact:
+                clear_screen()
+                print(f"Deleted a contact named {name}")
+            else:
+                clear_screen()
+                print(f"No contact named {name} found to delete.")
+        elif choice == "3":
+            name = input("Enter a name to search for: ")
+            contact_found = contact_book.search_contact(name)
+            if contact_found:
+                clear_screen()
+                print("Found a contact!")
+                print(contact_found)
+            else:
+                clear_screen()
+                print("No contact found.")
+        elif choice == "4":
+            clear_screen()
+            print("Here are all your contacts.")
+            contact_book.display_contacts()
+        elif choice == "5":
+            break
+        else:
+            clear_screen()
+            print("Please enter a valid option")
 
 
+if __name__ == "__main__":
+    clear_screen()
+    main()
